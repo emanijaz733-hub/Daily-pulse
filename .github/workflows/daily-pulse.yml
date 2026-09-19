@@ -1,0 +1,24 @@
+   name: Daily pulse
+
+   on:
+     schedule:
+       - cron: "0 7 * * *"   # 07:00 UTC = 12:00 PM Pakistan time
+     workflow_dispatch:
+
+   permissions:
+     contents: write
+
+   jobs:
+     pulse:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - name: Update pulse log
+           run: date -u +"%Y-%m-%d %H:%M:%S UTC" >> pulse-log.txt
+         - name: Commit and push
+           run: |
+             git config user.name "emanijaz733-hub"
+             git config user.email "eman.ijaz733@gmail.com"
+             git add pulse-log.txt
+             git commit -m "Daily pulse $(date -u +%F)"
+             git push
